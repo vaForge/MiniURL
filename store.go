@@ -1,6 +1,9 @@
 package main
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 type Store struct {
 	data map[string]string  //Simple hashmap (short -> long)
@@ -17,6 +20,7 @@ func (s *Store) Save(short, long string) { // Saving the gen link
 	s.mu.Lock()      //Write lock 
 	defer s.mu.Unlock() // Unlock after successful write
 	s.data[short] = long
+	fmt.Println("Saving:", short, "->", long)
 }
 
 func (s *Store) GetLink(short string) (string, bool) {

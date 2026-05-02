@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 )
@@ -38,13 +39,15 @@ func (h *Handler) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	h.store.Save(shortLink,req.URL)
 
 	json.NewEncoder(w).Encode(map[string]string{
-		"shortURL":shortLink,
+		string(req.URL):shortLink,
 	})
 }
 
 // Get handler {slug} : any short link generated
 func (h *Handler) Redirect(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Incoming path :",r.URL.Path)
 	slug := r.URL.Path[1:]
+	fmt.Println("Slug:", slug)
 
 	if long,ok := h.store.GetLink(slug); ok {
 		http.Redirect(w,r,long,http.StatusFound)
